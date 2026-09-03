@@ -48,7 +48,7 @@
 
     /* Quick contact bar */
     .quick-contact {
-      position: fixed; top: 65px; inset-inline: 0; z-index: 49;
+      position: fixed; top: 80px; inset-inline: 0; z-index: 49;
       background: var(--primary);
       color: #fff;
     }
@@ -65,13 +65,16 @@
       .quick-contact-inner { justify-content: flex-end; gap: 1.5rem; font-size: 0.75rem; }
     }
     @media (max-width: 767px) {
-      .quick-contact { top: 53px; }
+      .quick-contact { top: 66px; }
       .quick-contact-inner {
-        flex-wrap: nowrap; justify-content: center;
-        gap: 0.5rem; padding: 0.4rem 0.5rem;
-        font-size: 0.7rem; overflow: hidden; white-space: nowrap;
+        display: flex; flex-wrap: wrap;
+        justify-content: center; align-items: center;
+        column-gap: 0.4rem; row-gap: 0.1rem; padding: 0.4rem 0.5rem;
+        font-size: 0.72rem; text-align: center;
       }
-      .quick-contact-inner a svg { flex-shrink: 0; }
+      .quick-contact-inner a { justify-content: center; }
+      .quick-contact-inner > span:last-child { flex-basis: 100%; }
+      .quick-contact-sep { opacity: 0.55; }
     }
 
     /* Language switcher */

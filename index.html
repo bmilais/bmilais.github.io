@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Burger Lab Daruvar — Smash burgers &amp; good things</title>
+  <meta name="author" content="Burger Lab Daruvar">
+  <meta name="description" content="Burger Lab Daruvar — handcrafted smash burgers, brioche buns and bold toppings. Stjepana Radića 17, Daruvar. Open Mon–Sun 10–22.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Burger Lab Daruvar">
+  <meta property="og:description" content="Smash burgers &amp; other good things in the heart of Daruvar.">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --background: #0f0f0f;
+      --foreground: #f5f5f5;
+      --card: #1a1a1a;
+      --border: #2a2a2a;
+      --primary: #e87c2a;
+      --primary-foreground: #fff;
+      --muted-foreground: #888;
+      --yellow: #fbbf24;
+      --yellow-bg: rgba(251, 191, 36, 0.08);
+      --yellow-border: rgba(251, 191, 36, 0.25);
+    }
+    body { background: var(--background); color: var(--foreground); font-family: system-ui, sans-serif; }
+    a { color: inherit; text-decoration: none; }
+
+    /* Header */
+    header {
+      position: fixed; top: 0; inset-inline: 0; z-index: 50;
+      backdrop-filter: blur(12px); background: rgba(15,15,15,0.7);
+      border-bottom: 1px solid var(--border);
+    }
+    .header-inner {
+      max-width: 72rem; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.75rem 1.5rem; gap: 1rem;
+    }
+    .logo { display: flex; align-items: center; gap: 0.5rem; }
+    .logo img { height: 2.5rem; width: 2.5rem; object-fit: contain; }
+    .logo span { font-weight: 900; letter-spacing: 0.1em; color: var(--primary); }
+    nav { display: none; gap: 2rem; font-size: 0.875rem; font-weight: 500; }
+    @media (min-width: 768px) { nav { display: flex; } }
+    nav a:hover { color: var(--primary); }
+
+    .header-right { display: flex; align-items: center; gap: 0.75rem; }
+
+    /* Quick contact bar */
+    .quick-contact {
+      position: fixed; top: 65px; inset-inline: 0; z-index: 49;
+      background: var(--primary);
+      color: #fff;
+    }
+    .quick-contact-inner {
+      max-width: 72rem; margin: 0 auto;
+      display: flex; align-items: center; justify-content: center; gap: 1.5rem;
+      padding: 0.4rem 1.5rem; font-size: 0.8rem; font-weight: 600;
+      flex-wrap: wrap;
+    }
+    .quick-contact-inner a { display: inline-flex; align-items: center; gap: 0.375rem; }
+    .quick-contact-inner a:hover { text-decoration: underline; }
+    .quick-contact-sep { opacity: 0.4; }
+    @media (min-width: 768px) {
+      .quick-contact-inner { justify-content: flex-end; gap: 1.5rem; font-size: 0.75rem; }
+    }
+
+    /* Language switcher */
+    .lang-btn {
+      display: inline-flex; align-items: center; gap: 0.375rem;
+      border: 1px solid var(--border); border-radius: 9999px;
+      padding: 0.375rem 0.75rem; font-size: 0.75rem; font-weight: 700;
+      cursor: pointer; background: transparent; color: var(--foreground);
+      letter-spacing: 0.05em; transition: border-color 0.15s, color 0.15s;
+    }
+    .lang-btn:hover { border-color: var(--primary); color: var(--primary); }
+    .lang-btn .flag { font-size: 1rem; line-height: 1; }
+
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: var(--primary); color: var(--primary-foreground);
+      padding: 0.5rem 1rem; border-radius: 9999px;
+      font-weight: 700; font-size: 0.875rem;
+      transition: transform 0.15s;
+    }
+    .btn-primary:hover { transform: scale(1.05); }
+    @media (max-width: 640px) { .btn-primary { display: none; } }
+
+    /* Hero */
+    #top { position: relative; padding: 10rem 0 5rem; overflow: hidden; }
+    .hero-bg {
+      position: absolute; inset: 0; opacity: 0.3;
+      background-image:
+        radial-gradient(circle at 20% 30%, oklch(0.78 0.16 65 / 0.3), transparent 50%),
+        radial-gradient(circle at 80% 70%, oklch(0.6 0.22 25 / 0.2), transparent 50%);
+    }
+    .hero-inner {
+      position: relative; max-width: 72rem; margin: 0 auto; padding: 0 1.5rem;
+      display: grid; gap: 3rem; align-items: center;
+    }
+    @media (min-width: 768px) { .hero-inner { grid-template-columns: 1fr 1fr; } }
+    .badge-pill {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: rgba(232,124,42,0.1); border: 1px solid rgba(232,124,42,0.3);
+      color: var(--primary); padding: 0.25rem 0.75rem; border-radius: 9999px;
+      font-size: 0.75rem; font-weight: 700; margin-bottom: 1.5rem;
+      text-transform: uppercase; letter-spacing: 0.1em;
+    }
+    h1 { font-size: clamp(3rem, 10vw, 5rem); font-weight: 900; line-height: 0.9; letter-spacing: -0.02em; }
+    h1 .accent { color: var(--primary); }
+    .hero-sub { margin-top: 1.5rem; font-size: 1.125rem; color: var(--muted-foreground); max-width: 28rem; }
+    .hero-btns { margin-top: 2rem; display: flex; flex-wrap: wrap; gap: 1rem; }
+    .btn-outline {
+      border: 1px solid var(--border); padding: 0.75rem 1.5rem;
+      border-radius: 9999px; font-weight: 700;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+    .btn-filled {
+      background: var(--primary); color: var(--primary-foreground);
+      padding: 0.75rem 1.5rem; border-radius: 9999px; font-weight: 700;
+      transition: transform 0.15s;
+    }
+    .btn-filled:hover { transform: scale(1.05); }
+    .hero-img img { width: 100%; max-width: 28rem; margin: 0 auto; display: block; filter: drop-shadow(0 25px 50px rgba(0,0,0,0.5)); }
+
+    /* Menu */
+    #menu { padding: 6rem 0; background: var(--card); }
+    .section-inner { max-width: 72rem; margin: 0 auto; padding: 0 1.5rem; }
+    .section-head { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 3rem; flex-wrap: wrap; gap: 1rem; }
+    .section-label { color: var(--primary); font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; font-size: 0.875rem; }
+    .section-head h2 { font-size: clamp(2.5rem, 6vw, 3.75rem); font-weight: 900; margin-top: 0.5rem; }
+    .section-head p { color: var(--muted-foreground); max-width: 22rem; }
+
+    /* Accordion menu groups */
+    .menu-group { margin-bottom: 0; border-bottom: 1px solid var(--border); }
+    .menu-group-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.25rem 0; cursor: pointer; user-select: none;
+      transition: color 0.15s;
+    }
+    .menu-group-header:hover { color: var(--primary); }
+    .menu-group-header h3 {
+      font-size: 1.25rem; font-weight: 900; color: inherit;
+      text-transform: uppercase; letter-spacing: 0.1em; margin: 0;
+    }
+    .menu-group-header .chevron {
+      transition: transform 0.25s ease;
+      flex-shrink: 0; margin-left: 1rem;
+    }
+    .menu-group.open .menu-group-header .chevron { transform: rotate(180deg); }
+    .menu-group-body {
+      display: grid; grid-template-rows: 0fr;
+      transition: grid-template-rows 0.3s ease;
+    }
+    .menu-group.open .menu-group-body { grid-template-rows: 1fr; }
+    .menu-group-body-inner { overflow: hidden; }
+    .menu-grid { display: grid; gap: 0 2rem; padding-bottom: 1.5rem; }
+    @media (min-width: 768px) { .menu-grid { grid-template-columns: 1fr 1fr; } }
+    .menu-item { display: flex; align-items: baseline; gap: 0.75rem; padding: 0.5rem 0; border-bottom: 1px dashed var(--border); }
+    .menu-item-info { flex: 1; min-width: 0; }
+    .menu-item-info h4 { font-weight: 700; font-size: 1rem; }
+    .menu-item-info p { font-size: 0.75rem; color: var(--muted-foreground); margin-top: 0.125rem; }
+    .price { color: var(--primary); font-weight: 900; white-space: nowrap; }
+
+    /* Specialties section (yellow) */
+    .menu-group.specialties .menu-group-header {
+      background: var(--yellow-bg);
+      border: 1px solid var(--yellow-border);
+      border-radius: 0.75rem;
+      padding: 1rem 1.25rem;
+      margin-bottom: 0;
+    }
+    .menu-group.specialties .menu-group-header h3 { color: var(--yellow); }
+    .menu-group.specialties .menu-group-header:hover { background: rgba(251,191,36,0.12); }
+    .menu-group.specialties .menu-group-header .chevron { color: var(--yellow); }
+    .menu-group.specialties { border-bottom: none; margin-bottom: 0.75rem; }
+    .menu-group.specialties .price { color: var(--yellow); }
+    .menu-group.specialties .menu-item-info h4::before {
+      content: "★ "; color: var(--yellow);
+    }
+
+    /* kcal badge */
+    .kcal-badge {
+      display: inline-block;
+      background: rgba(232,124,42,0.15);
+      color: var(--primary);
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 0.15rem 0.4rem;
+      border-radius: 9999px;
+      margin-left: 0.375rem;
+      vertical-align: middle;
+    }
+
+    /* Spicy indicator */
+    .spicy {
+      display: inline-block;
+      margin-left: 0.4rem;
+      font-size: 0.8rem;
+      vertical-align: middle;
+      letter-spacing: 0.05em;
+    }
+
+    /* Jump navigation */
+    .jump-nav {
+      display: flex; gap: 0.375rem; flex-wrap: wrap;
+      margin-bottom: 1.25rem;
+      position: sticky; top: 140px; z-index: 30;
+      background: rgba(26,26,26,0.95);
+      backdrop-filter: blur(8px);
+      padding: 0.5rem;
+      border: 1px solid var(--border);
+      border-radius: 9999px;
+    }
+    .jump-nav a {
+      display: inline-flex; align-items: center; gap: 0.25rem;
+      padding: 0.3rem 0.6rem;
+      border: 1px solid var(--border); border-radius: 9999px;
+      font-size: 0.7rem; font-weight: 700; white-space: nowrap;
+      transition: border-color 0.15s, color 0.15s, background 0.15s;
+    }
+    .jump-nav a .cat-icon-nav { font-size: 0.8rem; }
+    .jump-nav a:hover { border-color: var(--primary); color: var(--primary); }
+    .jump-nav a.active { background: var(--primary); border-color: var(--primary); color: var(--primary-foreground); }
+
+    /* Category headings with icon */
+    .cat-icon { margin-right: 0.4rem; font-size: 1.1rem; vertical-align: middle; }
+
+    /* Sticky order CTA */
+    .sticky-order {
+      position: fixed; left: 1rem; right: 1rem; bottom: 1rem; z-index: 60;
+      display: none;
+    }
+    .sticky-order a {
+      display: flex; align-items: center; justify-content: center; gap: 0.6rem;
+      background: var(--primary); color: var(--primary-foreground);
+      padding: 1rem; border-radius: 9999px;
+      font-weight: 900; font-size: 1rem;
+      box-shadow: 0 10px 30px rgba(232,124,42,0.4);
+      transition: transform 0.15s;
+    }
+    .sticky-order a:hover { transform: scale(1.02); }
+    @media (max-width: 767px) { .sticky-order { display: block; } }
+
+    /* About */
+    #about { padding: 6rem 0; }
+    .about-inner { max-width: 72rem; margin: 0 auto; padding: 0 1.5rem; display: grid; gap: 3rem; align-items: center; }
+    @media (min-width: 768px) { .about-inner { grid-template-columns: 1fr 1fr; } }
+    .about-inner img { border-radius: 1.5rem; width: 100%; }
+    .about-inner h2 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 900; margin-top: 0.5rem; line-height: 1.1; }
+    .about-inner p { margin-top: 1.5rem; color: var(--muted-foreground); line-height: 1.7; }
+    .stats { margin-top: 2rem; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .stat { border: 1px solid var(--border); border-radius: 0.75rem; padding: 1rem; text-align: center; }
+    .stat-num { color: var(--primary); font-weight: 900; font-size: 1.5rem; }
+    .stat-label { font-size: 0.75rem; color: var(--muted-foreground); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 0.25rem; }
+
+    /* Visit */
+    #visit { padding: 6rem 0; background: var(--card); }
+    #visit .text-center { text-align: center; margin-bottom: 3rem; }
+    #visit h2 { font-size: clamp(2.5rem, 6vw, 3.75rem); font-weight: 900; margin-top: 0.5rem; }
+    .visit-grid { display: grid; gap: 1.5rem; }
+    @media (min-width: 768px) { .visit-grid { grid-template-columns: repeat(2, 1fr); } }
+    .visit-review { border-color: var(--yellow-border); background: var(--yellow-bg); }
+    .visit-review:hover { border-color: var(--yellow); }
+    .visit-review svg { color: var(--yellow); }
+    .visit-review h3 { color: var(--yellow); }
+    .visit-card { padding: 2rem; border-radius: 1rem; border: 1px solid var(--border); transition: border-color 0.15s; display: block; }
+    .visit-card:hover { border-color: var(--primary); }
+    .visit-card svg { color: var(--primary); margin-bottom: 1rem; }
+    .visit-card h3 { font-weight: 900; font-size: 1.125rem; margin-bottom: 0.25rem; }
+    .visit-card:hover h3 { color: var(--primary); }
+    .visit-card p { font-size: 0.875rem; color: var(--muted-foreground); }
+
+    /* Footer */
+    footer { border-top: 1px solid var(--border); padding: 2.5rem 0; }
+    .footer-inner { max-width: 72rem; margin: 0 auto; padding: 0 1.5rem; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; }
+    .footer-logo { display: flex; align-items: center; gap: 0.75rem; }
+    .footer-logo img { height: 2.5rem; width: 2.5rem; }
+    .footer-logo .name { font-weight: 900; color: var(--primary); }
+    .footer-logo .sub { font-size: 0.75rem; color: var(--muted-foreground); }
+    .footer-ig { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: var(--muted-foreground); transition: color 0.15s; }
+    .footer-ig:hover { color: var(--primary); }
+    .footer-copy { font-size: 0.75rem; color: var(--muted-foreground); }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="#top" class="logo">
+      <img src="burger-lab-logo.png" alt="Burger Lab">
+      <span>BURGER LAB</span>
+    </a>
+    <nav>
+      <a href="#menu" data-hr="Jelovnik" data-en="Menu">Jelovnik</a>
+      <a href="#about" data-hr="O nama" data-en="About us">O nama</a>
+      <a href="#visit" data-hr="Posjeti" data-en="Visit">Posjeti</a>
+    </nav>
+    <div class="header-right">
+      <button class="lang-btn" id="langToggle" onclick="toggleLang()">
+        <span class="flag">🇺🇸</span>
+        <span id="langLabel">EN</span>
+      </button>
+      <a href="tel:+385998731111" class="btn-primary">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"></path></svg>
+        <span data-hr="Naruči" data-en="Order">Naruči</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<div class="quick-contact">
+  <div class="quick-contact-inner">
+    <a href="tel:+385998731111">
+      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"></path></svg>
+      099 873 1111
+    </a>
+    <span class="quick-contact-sep">|</span>
+    <a href="https://maps.google.com/?q=Ul.+Stjepana+Radi%C4%87a+17,+Daruvar" target="_blank" rel="noreferrer">
+      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"></path><circle cx="12" cy="10" r="3"></circle></svg>
+      Stjepana Radića 17, Daruvar
+    </a>
+    <span class="quick-contact-sep">|</span>
+    <span data-hr="Otvoreno svaki dan 10–22h" data-en="Open daily 10 AM – 10 PM">Otvoreno svaki dan 10–22h</span>
+  </div>
+</div>
+
+<section id="top">
+  <div class="hero-bg"></div>
+  <div class="hero-inner">
+    <div>
+      <div class="badge-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3q1 4 4 6.5t3 5.5a1 1 0 0 1-14 0 5 5 0 0 1 1-3 1 1 0 0 0 5 0c0-2-1.5-3-1.5-5q0-2 2.5-4"></path></svg>
+        <span data-hr="Daruvar, Hrvatska" data-en="Daruvar, Croatia">Daruvar, Hrvatska</span>
+      </div>
+      <h1>
+        <span data-hr="Spljošteno." data-en="Smashed.">Spljošteno.</span><br>
+        <span data-hr="Složeno." data-en="Stacked.">Složeno.</span><br>
+        <span class="accent" data-hr="Posluženo." data-en="Served.">Posluženo.</span>
+      </h1>
+      <p class="hero-sub" data-hr="Ručno prešane pljeskavice, brioche peciva i vlastiti umaci. Burgeri i ostale dobre stvari, svježe pripremljene svaki dan." data-en="Hand-pressed patties, brioche buns and house sauces. Burgers &amp; other good things, made fresh every day.">Ručno prešane pljeskavice, brioche peciva i vlastiti umaci. Burgeri i ostale dobre stvari, svježe pripremljene svaki dan.</p>
+      <div class="hero-btns">
+        <a href="#menu" class="btn-filled" data-hr="Pogledaj jelovnik" data-en="See the menu">Pogledaj jelovnik</a>
+        <a href="tel:+385998731111" class="btn-outline" data-hr="Naruči telefonom" data-en="Call to order">Naruči telefonom</a>
+      </div>
+    </div>
+    <div class="hero-img">
+      <img src="burger-stack.jpg" alt="Burger Lab burgers">
+    </div>
+  </div>
+</section>
+
+<section id="menu">
+  <div class="section-inner">
+    <div class="section-head">
+      <div>
+        <p class="section-label" data-hr="Jelovnik" data-en="The Menu">Jelovnik</p>
+        <h2 data-hr="Napravljeno po narudžbi." data-en="Built to order.">Napravljeno po narudžbi.</h2>
+      </div>
+      <p data-hr="Pritisni kategoriju za otvaranje. Brioche peciva, 100% juneće meso, vlastiti umaci." data-en="Tap a category to open. Brioche buns, 100% beef, house sauces.">Pritisni kategoriju za otvaranje. Brioche peciva, 100% juneće meso, vlastiti umaci.</p>
+    </div>
+
+    <div class="jump-nav">
+      <a href="#g-zdravo" onclick="jumpToGroup(event,'g-zdravo')" data-hr="🥗 Zdravo" data-en="🥗 Healthy">🥗 Zdravo</a>
+      <a href="#g-burgeri" onclick="jumpToGroup(event,'g-burgeri')" data-hr="🍔 Burgeri" data-en="🍔 Burgers">🍔 Burgeri</a>
+      <a href="#g-piletina" onclick="jumpToGroup(event,'g-piletina')" data-hr="🍗 Piletina" data-en="🍗 Chicken">🍗 Piletina</a>
+      <a href="#g-salate" onclick="jumpToGroup(event,'g-salate')" data-hr="🥗 Salate" data-en="🥗 Salads">🥗 Salate</a>
+      <a href="#g-prilozi" onclick="jumpToGroup(event,'g-prilozi')" data-hr="🍟 Prilozi" data-en="🍟 Sides">🍟 Prilozi</a>
+      <a href="#g-komboi" onclick="jumpToGroup(event,'g-komboi')" data-hr="🍽️ Komboi" data-en="🍽️ Combos">🍽️ Komboi</a>
+      <a href="#g-pica" onclick="jumpToGroup(event,'g-pica')" data-hr="🥤 Pića" data-en="🥤 Drinks">🥤 Pića</a>
+    </div>
+
+    <!-- SPECIJALITETI -->
+    <div class="menu-group specialties open" id="g-zdravo">
+      <div class="menu-group-header" onclick="toggleGroup(this)">
+        <h3><span class="cat-icon">🥗</span><span data-hr="Imaš grižnju savjesti? (Zdrave opcije)" data-en="Guilt-free? (Healthy options)">Imaš grižnju savjesti? (Zdrave opcije)</span></h3>
+        <svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg>
+      </div>
+      <div class="menu-group-body">
+        <div class="menu-group-body-inner">
+          <div class="menu-grid">
+            <div class="menu-item"><div class="menu-item-info"><h4 data-hr="Nešto zdravo" data-en="Something Healthy">Nešto zdravo</h4><p data-hr="Basmati riža, spicy mayo, cherry rajčica, svježi krastavac, kukuruz, ljubičasti luk, piletina, grčki jogurt" data-en="Basmati rice, spicy mayo, cherry tomato, fresh cucumber, sweetcorn, red onion, chicken, Greek yogurt">Basmati riža, spicy mayo, cherry rajčica, svježi krastavac, kukuruz, ljubičasti luk, piletina, grčki jogurt</p></div><span class="price">6,90 €</span></div>
+            <div class="menu-item"><div class="menu-item-info"><h4>Teriyaki</h4><p data-hr="Basmati riža, teriyaki umak, umak od prženog sezama, brokula, mahune, cherry rajčica, svježi krastavac, slanutak, piletina" data-en="Basmati rice, teriyaki sauce, toasted sesame sauce, broccoli, green beans, cherry tomato, fresh cucumber, chickpeas, chicken">Basmati riža, teriyaki umak, umak od prženog sezama, brokula, mahune, cherry rajčica, svježi krastavac, slanutak, piletina</p></div><span class="price">8,90 €</span></div>
+            <div class="menu-item"><div class="menu-item-info"><h4 data-hr="Caporetto piletina" data-en="Caporetto Chicken">Caporetto piletina</h4><p data-hr="Basmati riža, pesto mayo, rukola, cikla, slanutak, feta, cherry rajčica, piletina, grčki jogurt" data-en="Basmati rice, pesto mayo, arugula, beetroot, chickpeas, feta, cherry tomato, chicken, Greek yogurt">Basmati riža, pesto mayo, rukola, cikla, slanutak, feta, cherry rajčica, piletina, grčki jogurt</p></div><span class="price">8,90 €</span></div>
+            <div class="menu-item"><div class="menu-item-info"><h4 data-hr="Caporetto tuna" data-en="Caporetto Tuna">Caporetto tuna</h4><p data-hr="Basmati riža, pesto mayo, rukola, cikla, slanutak, feta, cherry rajčica, tuna, grčki jogurt" data-en="Basmati rice, pesto mayo, arugula, beetroot, chickpeas, feta, cherry tomato, tuna, Greek yogurt">Basmati riža, pesto mayo, rukola, cikla, slanutak, feta, cherry rajčica, tuna, grčki jogurt</p></div><span class="price">8,90 €</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BURGERI -->
+    <div class="menu-group" id="g-burgeri">
+      <div class="menu-group-header" onclick="toggleGroup(this)">
+        <h3><span class="cat-icon">🍔</span><span data-hr="Burgeri" data-en="Burgers">Burgeri</span></h3>
+        <svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg>
+      </div>
+      <div class="menu-group-body">
+        <div class="menu-group-body-inner">
+          <div class="menu-grid">
+            <div class="menu-item"><div class="menu-item-info"><h4>80'</h4><p data-hr="Brioche pecivo, 100% juneće meso, cheddar, ljubičasti luk, kiseli krastavci, rajčica, iceberg" data-en="Brioche bun, 100% beef, cheddar, red onion, pickles, tomato, iceberg">Brioche pecivo, 100% juneće meso, cheddar, ljubičasti luk, kiseli krastavci, rajčica, iceberg</p></div><span class="price">7,90 €</span></div>
+            <div class="menu-item"><div class="menu-item-info"><h4 data-hr="Neki obični" data-en="The Classic">Neki obični</h4><p data-hr="Brioche pecivo, 100% juneće meso, hamby umak, tajni umak, ljubičasti luk, kiseli krastavci, rajčica, iceberg" data-en="Brioche bun, 100% beef, hamby sauce, secret sauce, red onion, pickles, tomato, iceberg">Brioche pecivo, 100% juneće meso, hamby umak, tajni umak, ljubičasti luk, kiseli krastavci, rajčica, iceberg</p></div><span class="price">8,90 €</span></div>
+            <div class="menu-item"><div class="menu-item-info"><h4>Spicy Mama <span class="spicy">🌶️</span></h4><p data-hr="Brioche pecivo, 100% juneće meso, cheddar, ukiseljeni Jalapeno, peperoncini, hamby umak" data-en="Brioche bun, 100% beef, cheddar, pickled jalapeño, peperoncini, hamby sauce">Brioche pecivo, 100% juneće meso, cheddar, ukiseljeni Jalapeno, peperoncini, hamby umak</p></div><span class="price">8,90 €</span></div>
+            <div class="menu-item"><div class="menu-item-info"><h4>Houseburger</h4><p data-hr="Brioche pecivo, 100% juneće meso, cheddar, džem od slanine, onion jam, gorgonzola, ukiseljene lučice" data-en="Brioche bun, 100% beef, cheddar, bacon jam, onion jam, gorgonzola, pickled pearl onions">Brioche pecivo, 100% juneće meso, cheddar, džem od slanine, onion jam, gorgonzola, ukiseljene lučice</p></div><span class="price">8,90 €</span></div>
+            <div class="menu-item"><div class="menu-item-info"><h4>BBQ Bacon</h4><p data-hr="Brioche pecivo, 100% juneće meso, cheddar, onion jam, bbq umak, rolana panceta, iceberg, rajčica" data-en="Brioche bun, 100% beef, cheddar, onion jam, BBQ sauce, rolled pancetta, iceberg, tomato">Brioche pecivo, 100% juneće meso, cheddar, onion jam, bbq umak, rolana panceta, iceberg, rajčica</p></div><span class="price">8,90 €</span></div>
+            <div class="menu-item"><div class="menu-item-info"><h4>Bosanac</h4><p data-hr="Somun, 100% juneće meso, ajvar, ljubičasti luk, kajmak" data-en="Somun bread, 100% beef, ajvar, red onion, kajmak">Somun, 100% juneće meso, ajvar, ljubičasti luk, kajmak</p></div><span class="price">7,90 €</span></div>
+            <div class="menu-item"><div class="menu-item-info"><h4>Tartufino</h4><p data-hr="Brioche pecivo, 100% juneće meso, cheddar, tartuf mayo, rukola, rolana panceta, ukiseljene lučice" data-en="Brioche bun, 100% beef, cheddar, truffle mayo, arugula, rolled pancetta, pickled pearl onions">Brioche pecivo, 100% juneće meso, cheddar, tartuf mayo, rukola, rolana panceta, ukiseljene lučice</p></div><span class="price">8,90 €</span></div>
+            <div class="menu-item"><div class="menu-item-info"><h4 data-hr="Bez Mesa" data-en="No Meat">Bez Mesa</h4><p data-hr="Brioche pecivo, Caesar umak, iceberg, rajčica, kiseli krastavci, onion rings, mozzarella sticks" data-en="Brioche bun, Caesar sauce, iceberg, tomato, pickles, onion rings, mozzarella sticks">Brioche pecivo, Caesar umak, iceberg, rajčica, kiseli krastavci, onion rings, mozzarella sticks</p></div><span class="price">8,90 €</span></div>
+            <div class="menu-item"><div class="menu-item-info"><h4>Kukuriku</h4><p data-hr="Brioche pecivo, umak na bazi grčkog jogurta, pohani pileći file, cheddar, svježi krastavci, iceberg" data-en="Brioche bun, Greek yogurt sauce, breaded chicken fillet, cheddar, fresh cucumber, iceberg">Brioche pecivo, umak na bazi grčkog jogurta, pohani pileći file, cheddar, svježi krastavci, iceberg</p></div><span class="price">8,90 €</span></div>
+            <div class="menu-item"><div class="menu-item-info"><h4>Burning Cock <span class="spicy">🌶️</span></h4><p data-hr="Brioche pecivo, pohani pileći file, hot honey umak, mileram, kiseli krastavci" data-en="Brioche bun, breaded chicken fillet, hot honey sauce, sour cream, pickles">Brioche pecivo, pohani pileći file, hot honey umak, mileram, kiseli krastavci</p></div><span class="price">8,90 €</span></div>
+            <div class="menu-item"><div class="menu-item-info"><h4 data-hr="Grill Picek" data-en="Grilled Chicken">Grill Picek</h4><p data-hr="Brioche pecivo, grill piletina, Caesar umak, iceberg, cheddar" data-en="Brioche bun, grilled chicken, Caesar sauce, iceberg, cheddar">Brioche pecivo, grill piletina, Caesar umak, iceberg, cheddar</p></div><span class="price">8,90 €</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PILETINA -->
+    <div class="menu-group" id="g-piletina">
+      <div class="menu-group-header" onclick="toggleGroup(this)">
+        <h3><span class="cat-icon">🍗</span><span data-hr="Piletina" data-en="Chicken">Piletina</span></h3>
+        <svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg>
+      </div>
+      <div class="menu-group-body">
+        <div class="menu-group-body-inner">
+          <div class="menu-grid">
+            <div class="menu-item"><div class="menu-item-info"><h4 data-hr="Ljuti kokošinjac" data-en="Spicy Henhouse">Ljuti kokošinjac <span class="spicy">🌶️</span></h4><p data-hr="7 kom, ljuti umak, blagi umak, pommes" data-en="7 pcs, hot sauce, mild sauce, fries">7 kom, ljuti umak, blagi umak, pommes</p></div><span class="price">8,90 €</span></div>
+            <div class="menu-item"><div class="menu-item-info"><h4 data-hr="BBQ kokošinjac" data-en="BBQ Henhouse">BBQ kokošinjac</h4><p data-hr="7 kom, bbq umak, blagi umak, pommes" data-en="7 pcs, BBQ sauce, mild sauce, fries">7 kom, bbq umak, blagi umak, pommes</p></div><span class="price">8,90 €</span></div>
+            <div class="menu-item"><div class="menu-item-info"><h4 data-hr="Pohano & pomfri" data-en="Schnitzel & Fries">Pohano & pomfri</h4><p data-hr="Panirani pileći file, pommes, hamby umak, tajni umak" data-en="Breaded chicken fillet, fries, hamby sauce, secret sauce">Panirani pileći file, pommes, hamby umak, tajni umak</p></div><span class="price">8,90 €</span></div>
+            <div class="menu-item"><div class="menu-item-info"><h4>Taquitos</h4><p data-hr="5 kom" data-en="5 pcs">5 kom</p></div><span class="price">6,50 €</span></div>
+            <div class="menu-item"><div class="menu-item-info"><h4>Chicken Strips</h4></div><span class="price">6,00 €</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SALATE -->
+    <div class="menu-group" id="g-salate">
+      <div class="menu-group-header" onclick="toggleGroup(this)">
+        <h3><span class="cat-icon">🥗</span><span data-hr="Salate" data-en="Salads">Salate</span></h3>
+        <svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg>
+      </div>
+      <div class="menu-group-body">
+        <div class="menu-group-body-inner">
+          <div class="menu-grid">
+            <div class="menu-item"><div class="menu-item-info"><h4>Crispy Salad</h4><p data-hr="Panirani pileći file, mix salata, cherry rajčica, hamby umak" data-en="Breaded chicken fillet, mixed greens, cherry tomato, hamby sauce">Panirani pileći file, mix salata, cherry rajčica, hamby umak</p></div><span class="price">7,90 €</span></div>
+            <div class="menu-item"><div class="menu-item-info"><h4>Ave Caesar</h4><p data-hr="Pileći file, iceberg salata, Caesar umak, krutoni, cherry rajčica, panceta, Grana Padano" data-en="Chicken fillet, iceberg, Caesar dressing, croutons, cherry tomato, pancetta, Grana Padano">Pileći file, iceberg salata, Caesar umak, krutoni, cherry rajčica, panceta, Grana Padano</p></div><span class="price">7,90 €</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRILOZI -->
+    <div class="menu-group" id="g-prilozi">
+      <div class="menu-group-header" onclick="toggleGroup(this)">
+        <h3><span class="cat-icon">🍟</span><span data-hr="Prilozi" data-en="Sides">Prilozi</span></h3>
+        <svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg>
+      </div>
+      <div class="menu-group-body">
+        <div class="menu-group-body-inner">
+          <div class="menu-grid">
+            <div class="menu-item"><div class="menu-item-info"><h4 data-hr="Batat" data-en="Sweet Potato Fries">Batat</h4><p>150 g</p></div><span class="price">3,50 €</span></div>
+            <div class="menu-item"><div class="menu-item-info"><h4 data-hr="Pommes" data-en="French Fries">Pommes</h4><p>150 g</p></div><span class="price">2,50 €</span></div>
+            <div class="menu-item"><div class="menu-item-info"><h4>Chilly Cheese</h4><p data-hr="6 kom" data-en="6 pcs">6 kom</p></div><span class="price">3,90 €</span></div>
+            <div class="menu-item"><div class="menu-item-info"><h4>Onion Rings</h4><p data-hr="10 kom" data-en="10 pcs">10 kom</p></div><span class="price">3,50 €</span></div>
+            <div class="menu-item"><div class="menu-item-info"><h4>Mozzarella Sticks</h4><p data-hr="6 kom" data-en="6 pcs">6 kom</p></div><span class="price">3,90 €</span></div>
+            <div class="menu-item"><div class="menu-item-info"><h4>Dirty Fries</h4><p data-hr="Pommes, cheddar, hamby umak, slanina, hrskavi luk" data-en="Fries, cheddar, hamby sauce, bacon, crispy onions">Pommes, cheddar, hamby umak, slanina, hrskavi luk</p></div><span class="price">5,50 €</span></div>
+            <div class="menu-item"><div class="menu-item-info"><h4>Istrian Fries</h4><p data-hr="Pommes, truffle mayo, Grana Padano, slanina" data-en="Fries, truffle mayo, Grana Padano, bacon">Pommes, truffle mayo, Grana Padano, slanina</p></div><span class="price">5,50 €</span></div>
+            <div class="menu-item"><div class="menu-item-info"><h4 data-hr="Ovo nema nigdje" data-en="Nowhere Else">Ovo nema nigdje</h4><p data-hr="Batat, pesto mayo, rukola, feta, cherry rajčica" data-en="Sweet potato, pesto mayo, arugula, feta, cherry tomato">Batat, pesto mayo, rukola, feta, cherry rajčica</p></div><span class="price">5,90 €</span></div>
+            <div class="menu-item"><div class="menu-item-info"><h4 data-hr="Umaci" data-en="Dipping Sauces">Umaci</h4></div><span class="price">0,50 €</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KOMBOI -->
+    <div class="menu-group" id="g-komboi">
+      <div class="menu-group-header" onclick="toggleGroup(this)">
+        <h3><span class="cat-icon">🍽️</span><span data-hr="Komboi" data-en="Combos">Komboi</span></h3>
+        <svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg>
+      </div>
+      <div class="menu-group-body">
+        <div class="menu-group-body-inner">
+          <div class="menu-grid">
+            <div class="menu-item"><div class="menu-item-info"><h4 data-hr="Uz svako jelo" data-en="With any dish">Uz svako jelo</h4><p data-hr="Pommes + Pepsi 0,25" data-en="Fries + Pepsi 0.25L">Pommes + Pepsi 0,25</p></div><span class="price">0,25 €</span></div>
+            <div class="menu-item"><div class="menu-item-info"><h4 data-hr="Za van" data-en="To go">Za van</h4><p data-hr="Pommes + Pepsi 0,33" data-en="Fries + Pepsi 0.33L">Pommes + Pepsi 0,33</p></div><span class="price">0,33 €</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BEZALKOHOLNA PIĆA -->
+    <div class="menu-group" id="g-pica">
+      <div class="menu-group-header" onclick="toggleGroup(this)">
+        <h3><span class="cat-icon">🥤</span><span data-hr="Bezalkoholna pića" data-en="Soft Drinks">Bezalkoholna pića</span></h3>
+        <svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg>
+      </div>
+      <div class="menu-group-body">
+        <div class="menu-group-body-inner">
+          <div class="menu-grid">
+            <div class="menu-item"><div class="menu-item-info"><h4>Pepsi / Pepsi Zero / Lime 0,25</h4></div><span class="price">2,90 €</span></div>
+            <div class="menu-item"><div class="menu-item-info"><h4 data-hr="Pepsi limenka / Zero / Lime 0,33" data-en="Pepsi Can / Zero / Lime 0.33">Pepsi limenka / Zero / Lime 0,33</h4></div><span class="price">2,90 €</span></div>
+            <div class="menu-item"><div class="menu-item-info"><h4>Nara 0,25</h4></div><span class="price">2,90 €</span></div>
+            <div class="menu-item"><div class="menu-item-info"><h4>7UP Zero 0,25</h4></div><span class="price">2,90 €</span></div>
+            <div class="menu-item"><div class="menu-item-info"><h4>Inka Bitter Lemon 0,25</h4></div><span class="price">2,90 €</span></div>
+            <div class="menu-item"><div class="menu-item-info"><h4>Inka Tonic 0,25</h4></div><span class="price">2,90 €</span></div>
+            <div class="menu-item"><div class="menu-item-info"><h4 data-hr="Fructal prirodni sokovi 0,2" data-en="Fructal Natural Juices 0.2">Fructal prirodni sokovi 0,2</h4><p data-hr="Razni okusi" data-en="Assorted flavours">Razni okusi</p></div><span class="price">2,90 €</span></div>
+            <div class="menu-item"><div class="menu-item-info"><h4 data-hr="Studena ledeni čaj 0,25" data-en="Studena Iced Tea 0.25">Studena ledeni čaj 0,25</h4><p data-hr="Razni okusi" data-en="Assorted flavours">Razni okusi</p></div><span class="price">2,90 €</span></div>
+            <div class="menu-item"><div class="menu-item-info"><h4 data-hr="Hidra limun/naranča 0,5" data-en="Hidra Lemon/Orange 0.5">Hidra limun/naranča 0,5</h4></div><span class="price">3,50 €</span></div>
+            <div class="menu-item"><div class="menu-item-info"><h4 data-hr="Studena negazirana voda 0,25" data-en="Studena Still Water 0.25">Studena negazirana voda 0,25</h4></div><span class="price">2,50 €</span></div>
+            <div class="menu-item"><div class="menu-item-info"><h4 data-hr="Radenska gazirana voda 0,25" data-en="Radenska Sparkling Water 0.25">Radenska gazirana voda 0,25</h4></div><span class="price">2,50 €</span></div>
+            <div class="menu-item"><div class="menu-item-info"><h4 data-hr="Radenska gazirana, razni okusi 0,25" data-en="Radenska Sparkling, assorted 0.25">Radenska gazirana, razni okusi 0,25</h4></div><span class="price">2,90 €</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ALKOHOLNA PIĆA -->
+    <div class="menu-group" id="g-alkohol">
+      <div class="menu-group-header" onclick="toggleGroup(this)">
+        <h3><span class="cat-icon">🍺</span><span data-hr="Alkoholna pića" data-en="Alcoholic Drinks">Alkoholna pića</span></h3>
+        <svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg>
+      </div>
+      <div class="menu-group-body">
+        <div class="menu-group-body-inner">
+          <div class="menu-grid">
+            <div class="menu-item"><div class="menu-item-info"><h4>Heineken 0,4</h4></div><span class="price">3,50 €</span></div>
+            <div class="menu-item"><div class="menu-item-info"><h4>Staročeško 0,5</h4></div><span class="price">2,50 €</span></div>
+            <div class="menu-item"><div class="menu-item-info"><h4>Pol-pol 0,2</h4><p data-hr="Šoškić graševina + gazirana voda" data-en="Šoškić Graševina + sparkling water">Šoškić graševina + gazirana voda</p></div><span class="price">2,50 €</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="about">
+  <div class="about-inner">
+    <img src="toppings.jpg" alt="Burger Lab toppings">
+    <div>
+      <p class="section-label" data-hr="Naš Lab" data-en="The Lab">Naš Lab</p>
+      <h2 data-hr="Svaki burger je eksperiment." data-en="Every burger is an experiment.">Svaki burger je eksperiment.</h2>
+      <p data-hr="Pokrenuli smo Burger Lab kako bismo jednu stvar napravili kako treba: savršeni smash burger. Hrskavi rubovi, sočna sredina, meko brioche pecivo i umaci koje sami pripremamo. Bez prečaca, bez filera — samo jak okus složen onako kako treba." data-en="We started Burger Lab to do one thing properly: a perfect smash burger. Crispy edges, juicy centre, soft brioche, and sauces we make ourselves. No shortcuts, no fillers — just bold flavour stacked the way it should be.">Pokrenuli smo Burger Lab kako bismo jednu stvar napravili kako treba: savršeni smash burger. Hrskavi rubovi, sočna sredina, meko brioche pecivo i umaci koje sami pripremamo. Bez prečaca, bez filera — samo jak okus složen onako kako treba.</p>
+      <div class="stats">
+        <div class="stat"><div class="stat-num">100%</div><div class="stat-label" data-hr="Govedina" data-en="Beef">Govedina</div></div>
+        <div class="stat"><div class="stat-num" data-hr="Svježe" data-en="Daily">Svježe</div><div class="stat-label" data-hr="Svaki dan" data-en="Fresh">Svaki dan</div></div>
+        <div class="stat"><div class="stat-num" data-hr="Vlastiti" data-en="House">Vlastiti</div><div class="stat-label" data-hr="Umaci" data-en="Sauces">Umaci</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="visit">
+  <div class="section-inner">
+    <div class="text-center">
+      <p class="section-label" data-hr="Posjetite nas" data-en="Visit Us">Posjetite nas</p>
+      <h2 data-hr="Dođite gladni." data-en="Come hungry.">Dođite gladni.</h2>
+    </div>
+    <div class="visit-grid">
+      <a href="https://maps.google.com/?q=Ul.+Stjepana+Radi%C4%87a+17,+Daruvar" target="_blank" rel="noreferrer" class="visit-card">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"></path><circle cx="12" cy="10" r="3"></circle></svg>
+        <h3 data-hr="Pronađite nas" data-en="Find us">Pronađite nas</h3>
+        <p>Ul. Stjepana Radića 17<br>Daruvar, <span data-hr="Hrvatska" data-en="Croatia">Hrvatska</span></p>
+      </a>
+      <div class="visit-card">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg>
+        <h3 data-hr="Otvoreno svaki dan" data-en="Open daily">Otvoreno svaki dan</h3>
+        <p><span data-hr="Pon – Ned" data-en="Mon – Sun">Pon – Ned</span><br>10:00 – 22:00</p>
+      </div>
+      <a href="tel:+385998731111" class="visit-card">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"></path></svg>
+        <h3 data-hr="Nazovite" data-en="Call ahead">Nazovite</h3>
+        <p>099 873 1111</p>
+      </a>
+      <a href="https://www.google.com/maps/place/Burger+Lab/@45.5908076,17.223329,18.01z/data=!4m6!3m5!1s0x4767992efa907db1:0x22a7a439096c11ca!8m2!3d45.5906841!4d17.2236432!16s%2Fg%2F11z1xwbwv9?entry=ttu&g_ep=EgoyMDI2MDkwMS4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noreferrer" class="visit-card visit-review">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"></path></svg>
+        <h3 data-hr="Ocijenite nas" data-en="Review us">Ocijenite nas</h3>
+        <p data-hr="Podijelite svoje iskustvo na Google recenzijama" data-en="Share your experience on Google reviews">Podijelite svoje iskustvo na Google recenzijama</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<div class="sticky-order">
+  <a href="tel:+385998731111">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"></path></svg>
+    <span data-hr="Naruči telefonom 099 873 1111" data-en="Order by phone 099 873 1111">Naruči telefonom 099 873 1111</span>
+  </a>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">
+      <img src="burger-lab-logo.png" alt="Burger Lab">
+      <div>
+        <div class="name">BURGER LAB</div>
+        <div class="sub">Daruvar · <span data-hr="Burgeri i dobre stvari" data-en="Burgers &amp; good things">Burgeri i dobre stvari</span></div>
+      </div>
+    </div>
+    <a href="https://www.instagram.com/burger_lab_daruvar/" target="_blank" rel="noreferrer" class="footer-ig">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line></svg>
+      @burger_lab_daruvar
+    </a>
+    <div class="footer-copy">© 2026 Burger Lab Daruvar</div>
+  </div>
+</footer>
+
+<script>
+  let currentLang = 'hr';
+
+  function toggleLang() {
+    currentLang = currentLang === 'hr' ? 'en' : 'hr';
+    applyLang();
+  }
+
+  function applyLang() {
+    const isHR = currentLang === 'hr';
+
+    document.querySelectorAll('[data-hr]').forEach(el => {
+      el.innerHTML = isHR ? el.dataset.hr : el.dataset.en;
+    });
+
+    const btn = document.getElementById('langToggle');
+    btn.querySelector('.flag').textContent = isHR ? '🇺🇸' : '🇭🇷';
+    document.getElementById('langLabel').textContent = isHR ? 'EN' : 'HR';
+    document.documentElement.lang = currentLang;
+  }
+
+  function toggleGroup(header) {
+    const group = header.closest('.menu-group');
+    group.classList.toggle('open');
+  }
+
+  function jumpToGroup(event, id) {
+    event.preventDefault();
+    const group = document.getElementById(id);
+    if (group && !group.classList.contains('open')) {
+      group.classList.add('open');
+    }
+    const header = document.querySelector('header');
+    const quick = document.querySelector('.quick-contact');
+    const offset = header.offsetHeight + quick.offsetHeight + 20;
+    const top = group.getBoundingClientRect().top + window.pageYOffset - offset;
+    window.scrollTo({ top, behavior: 'smooth' });
+  }
+</script>
+
+</body>
+</html>

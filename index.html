@@ -64,6 +64,15 @@
     @media (min-width: 768px) {
       .quick-contact-inner { justify-content: flex-end; gap: 1.5rem; font-size: 0.75rem; }
     }
+    @media (max-width: 767px) {
+      .quick-contact { top: 53px; }
+      .quick-contact-inner {
+        flex-wrap: nowrap; justify-content: center;
+        gap: 0.5rem; padding: 0.4rem 0.5rem;
+        font-size: 0.7rem; overflow: hidden; white-space: nowrap;
+      }
+      .quick-contact-inner a svg { flex-shrink: 0; }
+    }
 
     /* Language switcher */
     .lang-btn {
